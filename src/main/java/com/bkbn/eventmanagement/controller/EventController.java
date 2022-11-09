@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -33,5 +34,17 @@ public class EventController {
     @GetMapping("/{eventId}")
     public EventDto findEventById(@PathVariable Integer eventId){
         return eventMapper.toDto(eventService.findEventById(eventId));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{eventId}")
+    public void deleteEventById(@PathVariable Integer eventId){
+        eventService.deleteEventById(eventId);
+    }
+
+    @GetMapping()
+    public List<EventDto> findAllEvents(){
+        List<Event> events = eventService.findAllEvents();
+        return eventMapper.toDtos(events);
     }
 }

@@ -66,6 +66,12 @@ public class EventServiceTest {
         Throwable exception = assertThrows(NotFoundException.class, () -> eventService.findEventById(1));
         assertEquals("Event not found",exception.getMessage());
     }
+    @Test
+    public void deleteEventById_notExistedEvent_throwsException() {
+        when(eventRepository.findById(1)).thenReturn(Optional.empty());
+        Throwable exception = assertThrows(NotFoundException.class, () -> eventService.deleteEventById(1));
+        assertEquals("Event not found",exception.getMessage());
+    }
 
     private Event getSampleEvent(Integer eventId,
                                  EventType eventType,

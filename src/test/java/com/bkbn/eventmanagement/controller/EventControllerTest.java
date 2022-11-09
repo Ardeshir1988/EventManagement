@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -74,7 +73,7 @@ public class EventControllerTest {
         var event = getSampleEvent(1,EventType.CONCERT,"coldplay","berlin","Germany",weather,List.of());
 
         when(eventService.findEventById(1)).thenReturn(event);
-        mockMvc.perform(get("/api/events/1").header("token", 1))
+        mockMvc.perform(get("/api/events/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value("coldplay"))
@@ -83,10 +82,20 @@ public class EventControllerTest {
     @Test
     void findEventById_notExisted_thrownNotFoundException() throws Exception {
         when(eventService.findEventById(1)).thenThrow(new NotFoundException("Event not found"));
-        mockMvc.perform(get("/api/events/1").header("token", 1))
+        mockMvc.perform(get("/api/events/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("Event not found"));
+    }
+
+    @Test
+    void deleteEventById_event1() throws Exception {
+        var weather = Weather.builder().temp(5.5).humidity(55).build();
+        var event = getSampleEvent(1,EventType.CONCERT,"coldplay","berlin","Germany",weather,List.of());
+
+        when(eventService.findEventById(1)).thenReturn(event);
+        mockMvc.perform(delete("/api/events/1"))
+                .andExpect(status().isNoContent());
     }
 
     private Event getSampleEvent(Integer eventId,

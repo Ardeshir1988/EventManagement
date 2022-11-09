@@ -8,6 +8,7 @@ import com.bkbn.eventmanagement.service.EventService;
 import com.bkbn.eventmanagement.service.RestClient;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -37,5 +38,16 @@ public class EventServiceImpl implements EventService {
     public Event findEventById(int eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(()-> new NotFoundException("Event not found"));
+    }
+
+    @Override
+    public void deleteEventById(int eventId) {
+        Event event = findEventById(eventId);
+        eventRepository.delete(event);
+    }
+
+    @Override
+    public List<Event> findAllEvents() {
+        return eventRepository.findAll();
     }
 }
