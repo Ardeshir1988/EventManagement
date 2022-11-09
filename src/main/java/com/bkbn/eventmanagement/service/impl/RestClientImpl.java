@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 public class RestClientImpl implements RestClient {
     @Value("${open-weather.url}")
     private String openWeatherBaseUrl;
+    @Value("${open-weather.appid}")
+    private String appid;
     private final RestTemplate client;
 
     public RestClientImpl(RestTemplateBuilder restTemplateBuilder) {
@@ -22,6 +24,6 @@ public class RestClientImpl implements RestClient {
     }
     @Override
     public OpenWeatherResponse getWeatherData(String city) {
-        return client.exchange(openWeatherBaseUrl + city, HttpMethod.GET, null, OpenWeatherResponse.class).getBody();
+        return client.exchange(openWeatherBaseUrl + city +"&appid="+appid, HttpMethod.GET, null, OpenWeatherResponse.class).getBody();
     }
 }
