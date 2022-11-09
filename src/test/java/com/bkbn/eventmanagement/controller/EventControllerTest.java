@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,7 +38,7 @@ public class EventControllerTest {
     public void createNewEvent() throws Exception {
         var weather = Weather.builder().temp(5.5).humidity(55).build();
         var event = getSampleEvent(1,EventType.CONCERT,"coldplay","berlin","Germany",weather,List.of());
-        when(eventService.saveEvent(event)).thenReturn(event);
+        when(eventService.saveEvent(event)).thenReturn(CompletableFuture.completedFuture(event));
         mockMvc.perform(post("/api/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(event)))
@@ -54,7 +55,7 @@ public class EventControllerTest {
         // set null
         event.setName(null);
 
-        when(eventService.saveEvent(event)).thenReturn(event);
+        when(eventService.saveEvent(event)).thenReturn(CompletableFuture.completedFuture(event));
 
         mockMvc.perform(post("/api/events")
                         .contentType(MediaType.APPLICATION_JSON)

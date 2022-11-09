@@ -1,6 +1,9 @@
 package com.bkbn.eventmanagement.service;
 
 import com.bkbn.eventmanagement.model.Event;
+
+import java.util.concurrent.CompletableFuture;
+
 public interface EventService {
-    Event saveEvent(Event event);
+    CompletableFuture<Event> saveEvent(Event event);
 }

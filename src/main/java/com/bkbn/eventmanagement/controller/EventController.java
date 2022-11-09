@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/events")
@@ -23,9 +24,9 @@ public class EventController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventDto saveNewEvent(@Valid @RequestBody EventDto eventDto){
+    public CompletableFuture<EventDto> saveNewEvent(@Valid @RequestBody EventDto eventDto){
         Event event = eventMapper.toEntity(eventDto);
-        Event savedEvent = eventService.saveEvent(event);
-        return eventMapper.toDto(savedEvent);
+        return eventService.saveEvent(event)
+                .thenApply(savedEvent -> eventMapper.toDto(savedEvent));
     }
 }
