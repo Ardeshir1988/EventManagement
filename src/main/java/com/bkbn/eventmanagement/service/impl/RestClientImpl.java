@@ -1,6 +1,7 @@
 package com.bkbn.eventmanagement.service.impl;
 
 import com.bkbn.eventmanagement.dto.OpenWeatherResponse;
+import com.bkbn.eventmanagement.exception.RestTemplateResponseErrorHandler;
 import com.bkbn.eventmanagement.service.RestClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -16,6 +17,7 @@ public class RestClientImpl implements RestClient {
 
     public RestClientImpl(RestTemplateBuilder restTemplateBuilder) {
         client = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
                 .build();
     }
     @Override
