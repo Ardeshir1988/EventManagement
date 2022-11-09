@@ -47,6 +47,23 @@ public class EventControllerTest {
                 .andExpect(jsonPath("$.city").value("berlin"));
     }
 
+    @Test
+    public void createNewEvent_withoutName_BadRequest() throws Exception {
+        var weather = Weather.builder().temp(5.5).humidity(55).build();
+        var event = getSampleEvent(1,EventType.CONCERT,"coldplay","berlin","Germany",weather,List.of());
+        // set null
+        event.setName(null);
+
+        when(eventService.saveEvent(event)).thenReturn(event);
+
+        mockMvc.perform(post("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(event)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Event name is mandatory"));
+    }
+
     private Event getSampleEvent(Integer eventId,
                                  EventType eventType,
                                  String eventName,
