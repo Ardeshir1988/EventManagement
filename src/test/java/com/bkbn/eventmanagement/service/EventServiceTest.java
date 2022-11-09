@@ -1,4 +1,4 @@
-package com.bkbn.eventmanagement;
+package com.bkbn.eventmanagement.service;
 
 import com.bkbn.eventmanagement.model.Event;
 import com.bkbn.eventmanagement.model.EventGuest;

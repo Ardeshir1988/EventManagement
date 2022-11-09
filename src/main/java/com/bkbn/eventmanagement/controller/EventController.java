@@ -4,15 +4,13 @@ import com.bkbn.eventmanagement.dto.EventDto;
 import com.bkbn.eventmanagement.mapper.EventMapper;
 import com.bkbn.eventmanagement.model.Event;
 import com.bkbn.eventmanagement.service.EventService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/event")
+@RequestMapping("/api/events")
 public class EventController {
     private final EventService eventService;
     private final EventMapper eventMapper;
@@ -24,6 +22,7 @@ public class EventController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public EventDto saveNewEvent(@Valid @RequestBody EventDto eventDto){
         Event event = eventMapper.toEntity(eventDto);
         Event savedEvent = eventService.saveEvent(event);
