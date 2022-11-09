@@ -29,4 +29,9 @@ public class EventController {
         return eventService.saveEvent(event)
                 .thenApply(savedEvent -> eventMapper.toDto(savedEvent));
     }
+
+    @GetMapping("/{eventId}")
+    public EventDto findEventById(@PathVariable Integer eventId){
+        return eventMapper.toDto(eventService.findEventById(eventId));
+    }
 }

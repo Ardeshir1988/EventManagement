@@ -1,5 +1,6 @@
 package com.bkbn.eventmanagement.controller;
 
+import com.bkbn.eventmanagement.exception.NotFoundException;
 import com.bkbn.eventmanagement.model.Event;
 import com.bkbn.eventmanagement.model.EventGuest;
 import com.bkbn.eventmanagement.model.EventType;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -63,6 +65,28 @@ public class EventControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("Event name is mandatory"));
+    }
+
+
+    @Test
+    void findEventById_event1() throws Exception {
+        var weather = Weather.builder().temp(5.5).humidity(55).build();
+        var event = getSampleEvent(1,EventType.CONCERT,"coldplay","berlin","Germany",weather,List.of());
+
+        when(eventService.findEventById(1)).thenReturn(event);
+        mockMvc.perform(get("/api/events/1").header("token", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name").value("coldplay"))
+                .andExpect(jsonPath("$.city").value("berlin"));
+    }
+    @Test
+    void findEventById_notExisted_thrownNotFoundException() throws Exception {
+        when(eventService.findEventById(1)).thenThrow(new NotFoundException("Event not found"));
+        mockMvc.perform(get("/api/events/1").header("token", 1))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Event not found"));
     }
 
     private Event getSampleEvent(Integer eventId,

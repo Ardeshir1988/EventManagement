@@ -1,6 +1,7 @@
 package com.bkbn.eventmanagement.service.impl;
 
 import com.bkbn.eventmanagement.dto.OpenWeatherResponse;
+import com.bkbn.eventmanagement.exception.NotFoundException;
 import com.bkbn.eventmanagement.model.Event;
 import com.bkbn.eventmanagement.repository.EventRepository;
 import com.bkbn.eventmanagement.service.EventService;
@@ -30,5 +31,11 @@ public class EventServiceImpl implements EventService {
                 })
                 .thenApply(eventRepository::save);
 
+    }
+
+    @Override
+    public Event findEventById(int eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(()-> new NotFoundException("Event not found"));
     }
 }
