@@ -20,3 +20,6 @@ spring:
         use_sql_comments: true
         format_sql: true
     defer-datasource-initialization: true
+
+open-weather:
+  url: https://api.openweathermap.org/data/2.5/weather?appid=328fd4aea9b3024516d1336b0329ef99&units=metric&q=
